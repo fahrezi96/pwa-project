@@ -18,7 +18,7 @@
 
 // OFFLINE ACCESS SECTION
 
-const staticCacheName = "site-static-v1";
+const staticCacheName = "site-static-v1.1";
 const assets = [
   "/pwa-project/",
   "/pwa-project/index.html",
@@ -43,9 +43,23 @@ self.addEventListener("install", (e) => {
 });
 // waiting to activate
 
+// // activate sw
+// self.addEventListener("activate", (e) => {
+//   console.log("sw has been activated");
+// });
+
 // activate sw
 self.addEventListener("activate", (e) => {
-  console.log("sw has been activated");
+  // console.log("sw has been activated");
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys
+          .filter((key) => key !== staticCacheName)
+          .map((key) => caches.delete(key))
+      );
+    })
+  );
 });
 
 // fetch event
